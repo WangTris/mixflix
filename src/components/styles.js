@@ -7,10 +7,11 @@ export const Root = styled("div")({
 });
 
 export const Toolbar = styled("div")({
-  width: "70px",
+  height: "70px",
 });
 
 export const Content = styled("main")({
   flexGrow: 1,
   padding: "2em",
+  width: "100%",
 });
