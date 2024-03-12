@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+// components
+import { Sidebar } from "../index";
 import {
   AppBar,
   IconButton,
@@ -19,6 +21,7 @@ import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 const NavBar = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width:600px)");
   const isAuthenticated = true;
@@ -49,7 +52,7 @@ const NavBar = () => {
               }}
               color="inherit"
               edge="start"
-              onClick={() => {}}
+              onClick={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
             >
               <Menu />
             </IconButton>
@@ -69,7 +72,12 @@ const NavBar = () => {
                 component={Link}
                 to={`/profile/:id`}
                 onClick={() => {}}
-                sx={{}}
+                sx={{
+                  "&:hover": {
+                    color: "white !important",
+                    textDecoration: "none",
+                  },
+                }}
               >
                 {!isMobile && <>My movie &nbsp;</>}
                 <Avatar
@@ -83,6 +91,45 @@ const NavBar = () => {
           {isMobile && "Search..."}
         </Toolbar>
       </AppBar>
+      <Box>
+        <nav
+          style={{
+            [theme.breakpoints.down("sm")]: {
+              width: "240px",
+              flexShrink: 0,
+            },
+          }}
+        >
+          {isMobile ? (
+            <Drawer
+              variant="temporary"
+              anchor="right"
+              open={mobileOpen}
+              onClose={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
+              ModalProps={{ keepMounted: true }}
+              sx={{
+                "& .MuiDrawer-paper": {
+                  width: "240px",
+                },
+              }}
+            >
+              <Sidebar setMobileOpen={setMobileOpen} />
+            </Drawer>
+          ) : (
+            <Drawer
+              sx={{
+                "& .MuiDrawer-paper": {
+                  width: "240px",
+                },
+              }}
+              variant="permanent"
+              open
+            >
+              {/* <Sidebar setMobileOpen={setMobileOpen} /> */}
+            </Drawer>
+          )}
+        </nav>
+      </Box>
     </>
   );
 };
