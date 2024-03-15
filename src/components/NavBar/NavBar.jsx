@@ -125,7 +125,7 @@ const NavBar = () => {
               variant="permanent"
               open
             >
-              {/* <Sidebar setMobileOpen={setMobileOpen} /> */}
+              <Sidebar setMobileOpen={setMobileOpen} />
             </Drawer>
           )}
         </nav>
