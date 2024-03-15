@@ -13,4 +13,6 @@ NODE_OPTIONS=--openssl-legacy-provider npm start
 set NODE_OPTIONS=--openssl-legacy-provider
 npm start
 
+## Environment
+
 #### .env: REACT_APP_TMDB_KEY=9877a2625132c716a9ffaa94848d751e
