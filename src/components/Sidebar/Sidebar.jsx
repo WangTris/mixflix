@@ -10,12 +10,17 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/styles";
+import { useDispatch, useSelector } from "react-redux";
+
+import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
 import { useGetGenresQuery } from "../../services/TMDB";
+import useStyles from "./styles";
+import genreIcons from "../../assets/genres";
 
 // logos
-import lightLogo from "../../assets/logo/light.png";
-import darkLogo from "../../assets/logo/dark.png";
+import darkLogo from "../../assets/logos/light.png";
+import lightLogo from "../../assets/logos/dark.png";
 
 const categories = [
   { label: "Popular", value: "popular" },
@@ -24,33 +29,32 @@ const categories = [
 ];
 
 const Sidebar = ({ setMobileOpen }) => {
+  const { genreIdOrCategoryName } = useSelector(
+    (state) => state.currentGenreOrCategory
+  );
   const theme = useTheme();
-  const { data, error, isFetching } = useGetGenresQuery();
+  const classes = useStyles();
+  const { data, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
 
   return (
     <>
-      <Link
-        to="/"
-        style={{ display: "flex", justifyContent: "center", padding: "10% 0" }}
-      >
+      <Link to="/" className={classes.imageLink}>
         <img
+          className={classes.image}
           src={theme.palette.mode === "light" ? lightLogo : darkLogo}
-          alt="MixFlix Logo"
-          style={{ width: "70%" }}
+          alt="Filmpire logo"
         />
       </Link>
       <Divider />
-      {/* <List>
+      <List>
         <ListSubheader>Categories</ListSubheader>
         {categories.map(({ label, value }) => (
-          <Link
-            key={value}
-            to="/"
-            style={{
-              color: "theme.palette.text.primary",
-              textDecoration: "none",
-            }}
-          >
+          <Link key={value} className={classes.links} to="/">
             <ListItem
               onClick={() => dispatch(selectGenreOrCategory(value))}
               button
@@ -58,49 +62,34 @@ const Sidebar = ({ setMobileOpen }) => {
               <ListItemIcon>
                 <img
                   src={genreIcons[label.toLowerCase()]}
+                  className={classes.genreImage}
                   height={30}
-                  style={{
-                    filter:
-                      theme.palette.mode === "dark" ? "dark" : "invert(1)",
-                  }}
-                  alt="Genre logo"
                 />
               </ListItemIcon>
               <ListItemText primary={label} />
             </ListItem>
           </Link>
         ))}
-      </List> */}
+      </List>
       <Divider />
       <List>
         <ListSubheader>Genres</ListSubheader>
         {isFetching ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box display="flex" justifyContent="center">
             <CircularProgress />
           </Box>
         ) : (
           data.genres.map(({ name, id }) => (
-            <Link
-              key={name}
-              to="/"
-              style={{
-                color: "theme.palette.text.primary",
-                textDecoration: "none",
-              }}
-            >
+            <Link key={name} className={classes.links} to="/">
               <ListItem
-              // onClick={() => dispatch(selectGenreOrCategory(value))}
-              // button
+                onClick={() => dispatch(selectGenreOrCategory(id))}
+                button
               >
                 <ListItemIcon>
                   <img
-                    // src={genreIcons[label.toLowerCase()]}
+                    src={genreIcons[name.toLowerCase()]}
+                    className={classes.genreImage}
                     height={30}
-                    style={{
-                      filter:
-                        theme.palette.mode === "dark" ? "dark" : "invert(1)",
-                    }}
-                    alt="Genre logo"
                   />
                 </ListItemIcon>
                 <ListItemText primary={name} />
